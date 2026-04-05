@@ -1,0 +1,27 @@
+{
+  "name": "smart_canteen_management",
+  "version": "1.0.0",
+  "description": "This project is a **microservices-based food ordering system** that allows students to pre-order meals efficiently.",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DeeptiTulsyan/smart-canteen-management.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DeeptiTulsyan/smart-canteen-management/issues"
+  },
+  "homepage": "https://github.com/DeeptiTulsyan/smart-canteen-management#readme",
+  "dependencies": {
+    "amqplib": "^1.0.3"
+  }
+}
