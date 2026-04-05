@@ -11,18 +11,15 @@ class WalletController {
         });
       }
 
-      const existingWallet = await Wallet.findOne({ studentId });
-
-      if (existingWallet) {
-        return res.status(400).json({
-          message: "Wallet already exists for this student"
-        });
+      const wallet = await Wallet.findOneAndUpdate(
+      { studentId }, 
+      { $inc: { balance: balance } }, // $inc adds the value to the current balance
+      { 
+        returnDocument: 'after',      // returns the updated document
+        upsert: true,   // creates the document if it doesn't exist
+        setDefaultsOnInsert: true // ensures schema defaults are applied if created
       }
-
-      const wallet = await Wallet.create({
-        studentId,
-        balance
-      });
+    );
 
       return res.status(201).json({
         message: "Wallet created successfully",

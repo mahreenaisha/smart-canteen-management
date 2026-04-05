@@ -1,9 +1,9 @@
 const Order = require("../models/Order");
 const { getMenuItemById } = require("../services/menuService");
+const { debitWallet } = require("../services/walletService");
 const { publishEvent } = require("../producers/orderProducer");
 
 class OrderController {
-
   // ✅ CREATE ORDER
   static async createOrder(req, res) {
     try {
@@ -16,43 +16,56 @@ class OrderController {
       const orderItems = [];
 
       for (const item of items) {
-        if (!item.menuId || !item.qty) {
+        if (!item.menuId || item.qty === undefined || item.qty <= 0) {
           return res.status(400).json({
-            message: "Each item must contain menuId and qty"
+            message: "Each item must contain menuId and qty",
           });
         }
 
         const menuItem = await getMenuItemById(item.menuId);
 
-        // ✅ FIX: Handle invalid menu item
         if (!menuItem) {
           return res.status(404).json({
-            message: `Menu item not found: ${item.menuId}`
+            message: `Menu item not found: ${item.menuId}`,
           });
         }
 
         orderItems.push({
           name: menuItem.name,
           price: menuItem.price,
-          qty: item.qty
+          qty: item.qty,
         });
       }
 
       const total = orderItems.reduce(
         (sum, item) => sum + item.price * item.qty,
-        0
+        0,
       );
+
+      // temporary until JWT integration
+      const studentId = "22BCE1023";
+      const email = "student@email.com";
+
+      // DEBIT WALLET BEFORE CREATING ORDER
+      let walletResponse;
+
+      try {
+        walletResponse = await debitWallet(studentId, total);
+      } catch (error) {
+        return res.status(400).json({
+          message: error.message,
+        });
+      }
 
       const order = await Order.create({
         orderId: "ORD" + Date.now(),
-        studentId: "22BCE1023", // temporary
-        email: "student@email.com", // temporary
+        studentId,
+        email,
         items: orderItems,
         total,
-        status: "PLACED"
+        status: "PLACED",
       });
 
-      // ✅ FIX: SEND ORDER_PLACED EVENT
       const eventData = {
         event: "ORDER_PLACED",
         orderId: order.orderId,
@@ -61,21 +74,21 @@ class OrderController {
         items: order.items,
         total: order.total,
         status: order.status,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       await publishEvent(eventData);
 
       return res.status(201).json({
         message: "Order placed successfully",
-        order
+        wallet: walletResponse,
+        order,
       });
-
     } catch (error) {
       console.error("Create Order Error:", error.message);
 
       return res.status(500).json({
-        message: error.message || "Failed to create order"
+        message: error.message || "Failed to create order",
       });
     }
   }
@@ -90,7 +103,7 @@ class OrderController {
 
       if (!status || !allowedStatuses.includes(status)) {
         return res.status(400).json({
-          message: "Invalid status"
+          message: "Invalid status",
         });
       }
 
@@ -98,7 +111,7 @@ class OrderController {
 
       if (!order) {
         return res.status(404).json({
-          message: "Order not found"
+          message: "Order not found",
         });
       }
 
@@ -123,7 +136,7 @@ class OrderController {
           items: order.items,
           total: order.total,
           status: order.status,
-          timestamp: new Date()
+          timestamp: new Date(),
         };
 
         await publishEvent(eventData);
@@ -131,14 +144,13 @@ class OrderController {
 
       return res.status(200).json({
         message: "Order status updated successfully",
-        order
+        order,
       });
-
     } catch (error) {
       console.error("Update Order Error:", error.message);
 
       return res.status(500).json({
-        message: error.message || "Error updating order status"
+        message: error.message || "Error updating order status",
       });
     }
   }
@@ -152,7 +164,7 @@ class OrderController {
       console.error("Get All Orders Error:", error.message);
 
       return res.status(500).json({
-        message: "Error fetching orders"
+        message: "Error fetching orders",
       });
     }
   }
@@ -166,17 +178,16 @@ class OrderController {
 
       if (!order) {
         return res.status(404).json({
-          message: "Order not found"
+          message: "Order not found",
         });
       }
 
       return res.status(200).json(order);
-
     } catch (error) {
       console.error("Get Order By ID Error:", error.message);
 
       return res.status(500).json({
-        message: "Error fetching order"
+        message: "Error fetching order",
       });
     }
   }
