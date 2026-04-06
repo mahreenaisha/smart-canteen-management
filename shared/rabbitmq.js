@@ -12,9 +12,9 @@ const connectRabbitMQ = async () => {
       durable: true
     });
 
-    console.log("✅ RabbitMQ connected");
+    console.log("RabbitMQ connected");
   } catch (error) {
-    console.error("❌ RabbitMQ connection error:", error);
+    console.error("RabbitMQ connection error:", error);
   }
 };
 

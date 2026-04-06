@@ -6,7 +6,7 @@ const app = express();
 
 app.use(express.json());
 
-// 🔥 MENU SERVICE
+// MENU SERVICE
 app.use(
   "/api/menu",
   createProxyMiddleware({
@@ -15,7 +15,7 @@ app.use(
   })
 );
 
-// 🔥 ORDER SERVICE
+// ORDER SERVICE
 app.use(
   "/api/orders",
   createProxyMiddleware({
@@ -24,7 +24,7 @@ app.use(
   })
 );
 
-// 🔥 ADMIN SERVICE
+// ADMIN SERVICE
 app.use(
   "/api/admin",
   createProxyMiddleware({
@@ -33,7 +33,7 @@ app.use(
   })
 );
 
-// 🔥 AUTH (admin login)
+// AUTH (admin login)
 app.use(
   "/api/auth",
   createProxyMiddleware({

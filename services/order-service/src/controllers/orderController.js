@@ -4,7 +4,6 @@ const { debitWallet } = require("../services/walletService");
 const { publishEvent } = require("../producers/orderProducer");
 
 class OrderController {
-  // ✅ CREATE ORDER
   static async createOrder(req, res) {
     try {
       const { items } = req.body;
@@ -44,13 +43,8 @@ class OrderController {
         0,
       );
 
-      // temporary until JWT integration
-      // const studentId = "22BCE1023";
-      // const email = "student@email.com";
-
       const { studentId, email } = req.user;
       
-      // DEBIT WALLET BEFORE CREATING ORDER
       let walletResponse;
 
       try {
@@ -97,13 +91,12 @@ class OrderController {
     }
   }
 
-  // ✅ UPDATE ORDER STATUS
   static async updateOrderStatus(req, res) {
     try {
       const { status } = req.body;
       const orderId = req.params.id;
 
-      const allowedStatuses = ["PLACED", "PREPARING", "READY", "CANCELLED"];
+      const allowedStatuses = ["PLACED", "READY", "CANCELLED"];
 
       if (!status || !allowedStatuses.includes(status)) {
         return res.status(400).json({
@@ -130,7 +123,6 @@ class OrderController {
         eventName = "ORDER_CANCELLED";
       }
 
-      // ✅ FIX: SEND EVENT
       if (eventName) {
         const eventData = {
           event: eventName,
@@ -159,7 +151,6 @@ class OrderController {
     }
   }
 
-  // ✅ GET ALL ORDERS
   static async getAllOrders(req, res) {
     try {
       const orders = await Order.find();
@@ -173,7 +164,6 @@ class OrderController {
     }
   }
 
-  // ✅ GET ORDER BY ID
   static async getOrderById(req, res) {
     try {
       const orderId = req.params.id;

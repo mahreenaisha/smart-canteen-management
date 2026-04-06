@@ -74,7 +74,6 @@ Notification Service:
 ## Step 8: Order Status Update
 
 Kitchen updates order:
-- PREPARING
 - READY
 
 Order Service publishes:

@@ -9,8 +9,8 @@ const start = async () => {
     console.log("Starting Notification Service...");
 
     await connectDB();
-    await connectRabbitMQ(); // Step 1
-    await startOrderConsumer(); // Step 2
+    await connectRabbitMQ(); 
+    await startOrderConsumer(); 
 
     console.log("Notification Service running");
   } catch (err) {

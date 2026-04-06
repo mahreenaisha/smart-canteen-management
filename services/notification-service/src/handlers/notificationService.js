@@ -16,18 +16,13 @@ const handleNotification = async (data) => {
     status = "READY";
   }
 
-  if (event === "ORDER_PREPARING") {
-    message = "Your order is being prepared";
-    status = "PREPARING";
-  }
-
   if (event === "ORDER_CANCELLED") {
     message = "Your order is cancelled";
     status = "CANCELLED";
   }
 
   try {
-    console.log("👉 About to save notification:", {
+    console.log("About to save notification:", {
       orderId,
       studentId,
       email,
@@ -43,10 +38,10 @@ const handleNotification = async (data) => {
       status
     });
 
-    console.log("✅ Saved in DB:", savedNotification);
-    console.log(`📩 ${message} (Order: ${orderId})`);
+    console.log("Saved in DB:", savedNotification);
+    console.log(`${message} (Order: ${orderId})`);
   } catch (error) {
-    console.error("❌ Failed to save notification:", error.message); // ✅ NOW YOU'LL SEE THE REAL ERROR
+    console.error("Failed to save notification:", error.message);
   }
 };
 

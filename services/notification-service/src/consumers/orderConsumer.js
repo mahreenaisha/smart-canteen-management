@@ -16,7 +16,7 @@ const startOrderConsumer = async () => {
 
     await handleNotification(data);
 
-    channel.ack(msg); // VERY IMPORTANT
+    channel.ack(msg); 
   });
 };
 

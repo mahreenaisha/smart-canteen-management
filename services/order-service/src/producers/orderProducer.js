@@ -10,9 +10,9 @@ const publishEvent = async (eventData) => {
       Buffer.from(JSON.stringify(eventData))
     );
 
-    console.log("📤 Event published:", eventData.event);
+    console.log("Event published:", eventData.event);
   } catch (error) {
-    console.error("❌ Error publishing event:", error);
+    console.error("Error publishing event:", error);
   }
 };
 

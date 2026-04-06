@@ -1,15 +1,13 @@
 const Menu = require("../models/Menu");
 const client = require("../cache/redis");
 
-/* =========================
-   CREATE MENU ITEM
-========================= */
+// CREATE MENU ITEM
 exports.createMenu = async (req, res) => {
   try {
     const newItem = new Menu(req.body);
     const savedItem = await newItem.save();
 
-    // 🔥 Clear cache
+    // Clear cache
     await client.del("menu");
 
     res.status(201).json(savedItem);
@@ -18,14 +16,12 @@ exports.createMenu = async (req, res) => {
   }
 };
 
-/* =========================
-   GET ALL MENU ITEMS (WITH CACHE + FILTER)
-========================= */
+// GET ALL MENU ITEMS (WITH CACHE + FILTER)
 exports.getAllMenu = async (req, res) => {
   try {
     let cacheKey = "menu";
 
-    // 🔥 Change cache key if category filter exists
+    // Change cache key if category filter exists
     if (req.query.category) {
       cacheKey = `menu:${req.query.category}`;
     }
@@ -59,9 +55,7 @@ exports.getAllMenu = async (req, res) => {
   }
 };
 
-/* =========================
-   GET SINGLE MENU ITEM
-========================= */
+// GET SINGLE MENU ITEM
 exports.getMenuById = async (req, res) => {
   try {
     const item = await Menu.findById(req.params.id);
@@ -76,9 +70,7 @@ exports.getMenuById = async (req, res) => {
   }
 };
 
-/* =========================
-   UPDATE MENU ITEM
-========================= */
+// UPDATE MENU ITEM
 exports.updateMenu = async (req, res) => {
   try {
     const updatedItem = await Menu.findByIdAndUpdate(
@@ -91,7 +83,7 @@ exports.updateMenu = async (req, res) => {
       return res.status(404).json({ message: "Menu item not found" });
     }
 
-    // 🔥 Clear cache
+    // Clear cache
     await client.del("menu");
 
     res.status(200).json(updatedItem);
@@ -100,9 +92,7 @@ exports.updateMenu = async (req, res) => {
   }
 };
 
-/* =========================
-   DELETE MENU ITEM
-========================= */
+// DELETE MENU ITEM
 exports.deleteMenu = async (req, res) => {
   try {
     const deletedItem = await Menu.findByIdAndDelete(req.params.id);
