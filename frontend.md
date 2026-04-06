@@ -69,7 +69,7 @@ keep    → src/main.jsx     (entry point)
 ---
 
 ## 📁 File Structure
-
+```
 smart-canteen-system/
 │
 ├── services/
