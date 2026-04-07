@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log(err));
 
 // Routes
-app.use("/wallet", walletRoutes);
+app.use("/api/wallet", walletRoutes);
 
 // Health check (optional but useful)
 app.get("/", (req, res) => {
@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5004;
+const PORT = process.env.PORT || 5005;
 
 app.listen(PORT, () => {
   console.log(`Wallet Service running on port ${PORT}`);

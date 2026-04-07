@@ -43,7 +43,13 @@ class OrderController {
         0,
       );
 
-      const { studentId, email } = req.user;
+      const { studentId, email, role } = req.user;
+
+      if (role === "admin" || !studentId || !email) {
+        return res.status(403).json({
+          message: "Only students can place orders",
+        });
+      }
       
       let walletResponse;
 
@@ -75,6 +81,10 @@ class OrderController {
         timestamp: new Date(),
       };
 
+      console.log("Order created successfully, publishing ORDER_PLACED", {
+        orderId: order.orderId,
+        studentId: order.studentId,
+      });
       await publishEvent(eventData);
 
       return res.status(201).json({
@@ -93,6 +103,12 @@ class OrderController {
 
   static async updateOrderStatus(req, res) {
     try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({
+          message: "Admin access required",
+        });
+      }
+
       const { status } = req.body;
       const orderId = req.params.id;
 
@@ -135,6 +151,10 @@ class OrderController {
           timestamp: new Date(),
         };
 
+        console.log("Publishing order status event", {
+          event: eventName,
+          orderId: order.orderId,
+        });
         await publishEvent(eventData);
       }
 
@@ -153,7 +173,11 @@ class OrderController {
 
   static async getAllOrders(req, res) {
     try {
-      const orders = await Order.find();
+      const query = req.user?.role === "admin"
+        ? {}
+        : { studentId: req.user.studentId };
+
+      const orders = await Order.find(query);
       return res.status(200).json(orders);
     } catch (error) {
       console.error("Get All Orders Error:", error.message);
@@ -173,6 +197,15 @@ class OrderController {
       if (!order) {
         return res.status(404).json({
           message: "Order not found",
+        });
+      }
+
+      if (
+        req.user?.role !== "admin" &&
+        order.studentId !== req.user?.studentId
+      ) {
+        return res.status(403).json({
+          message: "You can only view your own orders",
         });
       }
 

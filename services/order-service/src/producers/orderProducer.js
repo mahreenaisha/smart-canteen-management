@@ -5,6 +5,8 @@ const publishEvent = async (eventData) => {
   try {
     const channel = getChannel();
 
+    console.log("Publishing event to queue:", QUEUE_NAME, eventData);
+
     channel.sendToQueue(
       QUEUE_NAME,
       Buffer.from(JSON.stringify(eventData))

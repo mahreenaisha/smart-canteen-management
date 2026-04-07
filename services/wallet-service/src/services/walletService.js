@@ -3,7 +3,7 @@ import axios from "axios";
 const debitWallet = async (studentId, amount) => {
   try {
     const response = await axios.post(
-      `${process.env.WALLET_SERVICE}/wallet/debit`,
+      `${process.env.WALLET_SERVICE}/api/wallet/debit`,
       {
         studentId,
         amount

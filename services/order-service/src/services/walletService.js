@@ -3,7 +3,7 @@ const axios = require("axios");
 const debitWallet = async (studentId, amount, token) => {
   try {
     const response = await axios.post(
-      `${process.env.WALLET_SERVICE}/wallet/debit`,
+      `${process.env.WALLET_SERVICE}/api/wallet/debit`,
       {
         studentId,
         amount

@@ -10,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/admin", adminRoutes);
+app.use("/api/admin/auth", authRoutes);
 app.use("/api/auth", authRoutes);
 
 module.exports = app;

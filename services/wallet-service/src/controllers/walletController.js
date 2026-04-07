@@ -4,10 +4,17 @@ class WalletController {
   static async createWallet(req, res) {
     try {
       const { studentId, balance } = req.body;
+      const isAdmin = req.user?.role === "admin";
 
       if (!studentId || balance === undefined) {
         return res.status(400).json({
           message: "studentId and balance are required"
+        });
+      }
+
+      if (!isAdmin && req.user?.studentId !== studentId) {
+        return res.status(403).json({
+          message: "You can only create or update your own wallet"
         });
       }
 
@@ -35,6 +42,13 @@ class WalletController {
   static async getWalletByStudentId(req, res) {
     try {
       const { studentId } = req.params;
+      const isAdmin = req.user?.role === "admin";
+
+      if (!isAdmin && req.user?.studentId !== studentId) {
+        return res.status(403).json({
+          message: "You can only view your own wallet"
+        });
+      }
 
       const wallet = await Wallet.findOne({ studentId });
 
@@ -55,10 +69,17 @@ class WalletController {
   static async debitWallet(req, res) {
     try {
       const { studentId, amount } = req.body;
+      const isAdmin = req.user?.role === "admin";
 
       if (!studentId || amount === undefined) {
         return res.status(400).json({
           message: "studentId and amount are required"
+        });
+      }
+
+      if (!isAdmin && req.user?.studentId !== studentId) {
+        return res.status(403).json({
+          message: "You can only debit your own wallet"
         });
       }
 
