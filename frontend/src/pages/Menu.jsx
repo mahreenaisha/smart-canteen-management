@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import { getMenu, getMenuById } from "../services/menuService";
 import { addCartItem, getCart } from "../services/cartStorage";
 
+function formatMenuName(name) {
+  return name.replace(/\s\d{8,}$/, "");
+}
+
 export default function Menu() {
   const [menu, setMenu] = useState([]);
   const [error, setError] = useState("");
@@ -55,11 +59,24 @@ export default function Menu() {
       <section className="hero-card">
         <h1 className="hero-title">Today&apos;s Menu</h1>
         <p className="hero-copy">
-          Go to <Link to="/cart"> cart</Link> to place the order.
+          Fresh canteen picks for the day. Add items as you browse, then head to your
+          <Link className="subtle-link" to="/cart"> cart</Link> when you&apos;re ready.
         </p>
-        <div className="summary-row">
-          <span className="muted">{cartCount} item(s) currently in cart</span>
-          <Link className="secondary-btn" to="/cart">Review Cart</Link>
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-label">Live Cart</div>
+            <div className="stat-value">{cartCount}</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-label">Menu Items</div>
+            <div className="stat-value">{menu.length}</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-label">Next Step</div>
+            <div className="stat-action">
+              <Link className="primary-btn" to="/cart">Review Cart</Link>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -69,14 +86,14 @@ export default function Menu() {
       <section className="menu-grid">
         {menu.map((item) => (
           <article className="menu-card" key={item._id}>
-            <div className={item.isAvailable === false ? "pill warn" : "pill"}>
-              {item.category || "General"}
+            <div className={item.isAvailable === false ? "pill warn" : "pill live"}>
+              {item.isAvailable === false ? "Unavailable" : item.category || "Chef Selection"}
             </div>
             <div>
-              <h3>{item.name}</h3>
+              <h3 className="card-title">{formatMenuName(item.name)}</h3>
               <p className="muted mini-text">{item.description || "Freshly prepared canteen item"}</p>
             </div>
-            <div className="price-row">
+            <div className="price-row card-footer">
               <span className="price-tag">Rs. {item.price}</span>
               <button
                 type="button"

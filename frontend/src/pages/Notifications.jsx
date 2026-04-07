@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/useAuth";
 import { getNotifications } from "../services/notificationService";
-import { getOrders } from "../services/orderService";
 
 export default function Notifications() {
-  const { profile, token } = useAuth();
+  const { token } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -13,51 +12,25 @@ export default function Notifications() {
     let isMounted = true;
 
     async function loadNotifications() {
-      if (!token || !profile?.studentId) {
+      if (!token) {
         setLoading(false);
         return;
       }
 
       try {
-        const data = await getNotifications(profile.studentId, token);
+        const data = await getNotifications(token);
         if (!isMounted) {
           return;
         }
+
         setNotifications(data);
         setError("");
-      } catch {
+      } catch (requestError) {
         if (!isMounted) {
           return;
         }
 
-        try {
-          const orders = await getOrders(token);
-          if (!isMounted) {
-            return;
-          }
-
-          const fallbackNotifications = orders.map((order) => ({
-            _id: order.orderId,
-            orderId: order.orderId,
-            message:
-              order.status === "READY"
-                ? "Your order is ready"
-                : order.status === "CANCELLED"
-                  ? "Your order is cancelled"
-                  : "Your order is confirmed",
-            status: order.status,
-            createdAt: order.updatedAt || order.createdAt,
-          }));
-
-          setNotifications(fallbackNotifications);
-          setError("");
-        } catch (requestError) {
-          if (!isMounted) {
-            return;
-          }
-
-          setError(requestError.response?.data?.message || "Unable to fetch notifications");
-        }
+        setError(requestError.response?.data?.message || "Unable to fetch notifications");
       } finally {
         if (isMounted) {
           setLoading(false);
@@ -72,14 +45,13 @@ export default function Notifications() {
       isMounted = false;
       window.clearInterval(intervalId);
     };
-  }, [profile?.studentId, token]);
+  }, [token]);
 
   return (
     <>
       <section className="hero-card">
         <h1 className="hero-title">Notifications</h1>
-        <p className="hero-copy">
-        </p>
+        <p className="hero-copy">Live order updates from the notification service, refreshed automatically while you stay on this page.</p>
       </section>
 
       {error ? <div className="panel error-text">{error}</div> : null}
@@ -91,15 +63,17 @@ export default function Notifications() {
             <div className={`pill ${notification.status === "READY" ? "ready" : notification.status === "CANCELLED" ? "warn" : ""}`}>
               {notification.status}
             </div>
-            <h3>{notification.message}</h3>
-            <div className="muted mini-text">{notification.orderId}</div>
-            <div className="muted mini-text">
+            <h3 className="card-title">{notification.message}</h3>
+            <div className="order-meta muted mini-text">
+              <span>{notification.orderId}</span>
+              <span>
               {new Date(notification.createdAt).toLocaleString()}
+              </span>
             </div>
           </article>
         ))}
         {!loading && notifications.length === 0 ? (
-          <div className="panel muted">No notifications yet.</div>
+          <div className="empty-state muted">No notifications yet.</div>
         ) : null}
       </section>
     </>

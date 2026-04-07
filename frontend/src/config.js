@@ -6,4 +6,5 @@ export const API = {
 export const STORAGE_KEYS = {
   TOKEN: "canteen_token",
   CART: "canteen_cart",
+  ADMIN_TOKEN: "canteen_admin_token",
 };

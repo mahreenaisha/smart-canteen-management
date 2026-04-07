@@ -19,7 +19,8 @@ export default function Navbar() {
 
   return (
     <header className="topbar">
-      <div>
+      <div className="brand-wrap">
+        <div className="brand-kicker">Campus Ordering</div>
         <div className="brand">Smart Canteen</div>
         <div className="mini-text muted">{profile?.name ? `Signed in as ${profile.name}` : "Student portal"}</div>
       </div>

@@ -30,7 +30,7 @@ export default function Orders() {
     <>
       <section className="hero-card">
         <h1 className="hero-title">My Orders</h1>
-        <p className="hero-copy">Placed Orders</p>
+        <p className="hero-copy">Track every placed order, see line items, and watch status updates as your meal moves through the canteen.</p>
       </section>
 
       {error ? <div className="panel error-text">{error}</div> : null}
@@ -42,7 +42,7 @@ export default function Orders() {
             <div className={`pill ${order.status === "READY" ? "ready" : order.status === "CANCELLED" ? "warn" : ""}`}>
               {order.status}
             </div>
-            <h3>{order.orderId}</h3>
+            <h3 className="card-title">{order.orderId}</h3>
             <div className="stack mini-text muted">
               {order.items.map((item) => (
                 <span key={`${order.orderId}-${item.name}`}>
@@ -52,11 +52,11 @@ export default function Orders() {
             </div>
             <div className="summary-row">
               <span>Total</span>
-              <strong>Rs. {order.total}</strong>
+              <strong className="money-strong">Rs. {order.total}</strong>
             </div>
           </article>
         ))}
-        {!loading && orders.length === 0 ? <div className="panel muted">No orders yet.</div> : null}
+        {!loading && orders.length === 0 ? <div className="empty-state muted">No orders yet.</div> : null}
       </section>
     </>
   );

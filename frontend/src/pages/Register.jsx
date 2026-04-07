@@ -38,7 +38,7 @@ export default function Register() {
     <div className="auth-shell">
       <div className="auth-card panel">
         <h1 className="hero-title">Create Account</h1>
-        <p className="hero-copy">Register</p>
+        <p className="hero-copy">Create a student account for browsing menu items, using wallet balance, and placing orders.</p>
         <form className="form-grid" onSubmit={handleSubmit}>
           <label className="field">
             <span>Name</span>

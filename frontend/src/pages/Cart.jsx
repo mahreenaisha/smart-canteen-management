@@ -48,21 +48,22 @@ export default function Cart() {
     <div className="layout-grid">
       <section className="panel">
         <h1 className="hero-title">Cart</h1>
+        <p className="hero-copy">Review quantities, confirm the total, and place your order in one step.</p>
         {error ? <div className="error-text">{error}</div> : null}
         {message ? <div className="success-text">{message}</div> : null}
         <div className="cart-list">
-          {cart.length === 0 ? <div className="muted">Your cart is empty.</div> : null}
+          {cart.length === 0 ? <div className="empty-state muted">Your cart is empty.</div> : null}
           {cart.map((item) => (
             <article className="cart-item" key={item.menuId}>
               <div className="cart-row">
                 <div>
-                  <strong>{item.name}</strong>
+                  <strong className="card-title">{item.name}</strong>
                   <div className="muted mini-text">Rs. {item.price} each</div>
                 </div>
-                <div className="cart-row">
-                  <button className="secondary-btn" type="button" onClick={() => changeQty(item.menuId, item.qty - 1)}>-</button>
-                  <span>{item.qty}</span>
-                  <button className="secondary-btn" type="button" onClick={() => changeQty(item.menuId, item.qty + 1)}>+</button>
+                <div className="qty-group">
+                  <button className="qty-btn" type="button" onClick={() => changeQty(item.menuId, item.qty - 1)}>-</button>
+                  <span className="qty-value">{item.qty}</span>
+                  <button className="qty-btn" type="button" onClick={() => changeQty(item.menuId, item.qty + 1)}>+</button>
                 </div>
               </div>
             </article>
@@ -71,7 +72,7 @@ export default function Cart() {
       </section>
 
       <aside className="panel">
-        <h2>Summary</h2>
+        <h2 className="section-title">Summary</h2>
         <div className="summary-list">
           <div className="summary-row">
             <span>Items</span>
@@ -79,7 +80,7 @@ export default function Cart() {
           </div>
           <div className="summary-row">
             <span>Total</span>
-            <strong>Rs. {total}</strong>
+            <strong className="money-strong">Rs. {total}</strong>
           </div>
         </div>
         <button className="primary-btn" type="button" disabled={cart.length === 0 || submitting} onClick={handlePlaceOrder}>

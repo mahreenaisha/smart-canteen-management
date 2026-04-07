@@ -67,7 +67,7 @@ export default function Wallet() {
     <div className="layout-grid">
       <section className="panel">
         <h1 className="hero-title">Wallet</h1>
-        <p className="hero-copy">Add funds</p>
+        <p className="hero-copy">Load balance before checkout so your orders can move through instantly when you place them.</p>
         <form className="form-grid" onSubmit={handleCreateOrTopUp}>
           <label className="field">
             <span>Amount to add</span>
@@ -89,12 +89,12 @@ export default function Wallet() {
       </section>
 
       <aside className="panel">
-        <h2>Current Balance</h2>
+        <h2 className="section-title">Current Balance</h2>
         {loading ? <div className="muted">Loading wallet...</div> : null}
         {!loading ? (
           <div className="wallet-balance">
             <span className="muted">{profile?.studentId || "Student"}</span>
-            <strong>Rs. {wallet?.balance || 0}</strong>
+            <strong className="money-strong">Rs. {wallet?.balance || 0}</strong>
           </div>
         ) : null}
       </aside>
